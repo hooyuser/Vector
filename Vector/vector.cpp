@@ -183,16 +183,20 @@ void Vector<T>::bubbleSort(Rank lo, Rank hi) //assert: 0 <= lo < hi <= size
 } //逐趟做扫描交换，直至全序
 
 
+
+
 template <typename T>
 Rank Vector<T>::bubble(Rank lo, Rank hi) //一趟扫描交换
 {
 	Rank last = lo; //最右侧的逆序对初始化为[lo - 1, lo]
-	while (++lo < hi) //自左向右，逐一检查各对相邻元素
+	while (++lo < hi)
+	{//自左向右，逐一检查各对相邻元素
 		if (_elem[lo - 1] > _elem[lo])
 		{ //若逆序，则
 			last = lo; //更新最右侧逆序对位置记录，并通过交换使局部有序
 			swap(_elem[lo - 1], _elem[lo]);
 		}
+	}
 	return last; //返回最右侧的逆序对位置
 }
 
@@ -273,11 +277,12 @@ static Rank fibSearch(T* A, T const& e, Rank lo, Rank hi)
 } //有多个命中元素时，不能保证返回秩最大者；失败时，简单地返回-1，而不能指示失败的位置
 
 
-template <typename T>
-void Vector<T>::traverse(void(*visit) (T&)) //倚劣函数指针机刢
+template<typename T>
+void Vector<T>::traverse(void(*)(T &))
 {
 	for (int i = 0; i < _size; i++) visit(_elem[i]); //遍历向量
 }
+
 
 template <typename T> //元素类型
 template <typename VST> //操作器
