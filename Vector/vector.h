@@ -126,6 +126,14 @@ public:
 		unsort(0, _size);
 	}
 
+	void insertionSort(Rank lo, Rank hi);  //²åÈëÅÅĞòËã·¨
+
+	void insertionSort()
+	{
+		insertionSort(0, _size);
+	}
+
+
 	void selectionSort(Rank lo, Rank hi); //Ñ¡ÔñÅÅĞòËã·¨
 
 	void selectionSort()
@@ -152,29 +160,29 @@ public:
 class Fib
 { //FibonacciÊıÁĞÀà
 private:
-	long long f, g; //f = fib(k - 1), g = fib(k)¡£¾ùÎªintĞÍ£¬¹¿ì¾Í»áÊıÖµÒç³ö
+	Rank f, g; //f = fib(k - 1), g = fib(k)¡£¾ùÎªintĞÍ£¬¹¿ì¾Í»áÊıÖµÒç³ö
 
 public:
-	Fib(int n) //³õÊ¼»¯Îª²»Ğ¡ÓÚnµÄ×îĞ¡FibonacciÏî£¬O(log_phi(n))Ê±¼ä
+	Fib(Rank n) //³õÊ¼»¯Îª²»Ğ¡ÓÚnµÄ×îĞ¡FibonacciÏî£¬O(log_phi(n))Ê±¼ä
 	{
 		f = 1; //f³õÊ¼»¯Îªfib(-1)
 		g = 0; //g³õÊ¼»¯Îªfib(0)
 		while (g < n) next();
 	}
 
-	int get() //»ñÈ¡µ±Ç°FibonacciÏî£¬O(1)Ê±¼ä
+	Rank get() //»ñÈ¡µ±Ç°FibonacciÏî£¬O(1)Ê±¼ä
 	{
 		return g;
 	}
 
-	int next() //×ªÖÁÏÂÒ»FibonacciÏî£¬O(1)Ê±¼ä
+	Rank next() //×ªÖÁÏÂÒ»FibonacciÏî£¬O(1)Ê±¼ä
 	{
 		g += f;
 		f = g - f;
 		return g;
 	}
 
-	int prev() //×ªÖÁÉÏÒ»FibonacciÏî£¬O(1)Ê±¼ä
+	Rank prev() //×ªÖÁÉÏÒ»FibonacciÏî£¬O(1)Ê±¼ä
 	{
 		f = g - f;
 		g -= f;
@@ -290,10 +298,11 @@ Rank Vector<T>::find(T const& e, Rank lo, Rank hi) const //ÎŞĞòÏòÁ¿µÄË³Ğò²éÕÒ£º·
 
 
 template <typename T> //½«e×÷ÎªÖÈÎªrÔªËØ“IÈë
-Rank Vector<T>::insert(Rank r, T const& e) { //assert: 0 <= r <= size
+Rank Vector<T>::insert(Rank r, T const& e) 
+{ //assert: 0 <= r <= size
 	expand(); //ÈôÓĞ±ØÒª£¬À©Èİ
 	for (int i = _size; i > r; i--)
-		_elem[i] = _elem[i - 1]; //×ÔºóÏòÇ°£¬ºó¼ÌÔªËØË³´Îºó¶‚Ò»¸öµ¥Ôª
+		_elem[i] = _elem[i - 1]; //×ÔºóÏòÇ°£¬ºó¼ÌÔªËØË³´ÎºóÒÆÒ»¸öµ¥Ôª
 	_elem[r] = e;
 	_size++; //ÖÃÈëĞÂÔªËØÔ¸üĞÂÈİÁ¿
 	return r; //Ş†»ØÖÈ
@@ -386,15 +395,30 @@ Rank Vector<T>::bubble(Rank lo, Rank hi) //Ò»ÌËÉ¨Ãè½»»»
 
 
 template<typename T>
-void Vector<T>::selectionSort(Rank lo, Rank hi)
+void Vector<T>::selectionSort(Rank lo, Rank hi)  //Ñ¡ÔñÅÅĞò
 {
+	int max;
 	for (int i = hi - 1; i > lo; i--)
 	{
-		int max = lo;
+		max = lo;
 		for (int j = lo + 1; j <= i; j++)
 			if (_elem[j] > _elem[max])
 				max = j;
 		swap(_elem[i], _elem[max]);
+	}
+}
+
+
+template<typename T>
+void Vector<T>::insertionSort(Rank lo, Rank hi) //²åÈëÅÅĞò
+{
+	for (int i = lo + 1; i < hi; i++) //½øĞĞhi-lo-1ÂÖÅÅĞò£¬µÚiÂÖ½«_elem[i]²åÈëµ½[lo,i)ÖĞµÄÇ¡µ±Î»ÖÃ
+	{
+		T temp = _elem[i];		
+		Rank index = search(_elem[i], lo, i) + 1;  //Ó¦¸Ã²åÈë_elem[i]µÄÎ»ÖÃ
+		for (int j = i; j > index; j--)
+			_elem[j] = _elem[j - 1];
+		_elem[index] = temp;	
 	}
 }
 
@@ -432,7 +456,7 @@ void Vector<T>::merge(Rank lo, Rank mi, Rank hi)//¸÷×ÔÓĞĞòµÄ×ÓÏòÁ¿[lo, mi)ºÍ[mi,
 } //¹é²¢ºóµÃµ½ÍêÕûµÄÓĞĞòÏòÁ¿[lo, hi)
 
 
-template <typename T> //ÔÚÓĞĞòÏòÁ¿µÄÇø¼ä[lo, hi)ÄÚ£¬È·¶¨²»´óÓÚeµÄ×îºóÒ»¸ö½ÚµãµÄÖÈ
+template <typename T> //ÔÚÓĞĞòÏòÁ¿µÄÇø¼ä[lo, hi)ÄÚ£¬È·¶¨Ğ¡ÓÚµÈÓÚeµÄ×îºóÒ»¸ö½ÚµãµÄÖÈ
 Rank Vector<T>::search(T const& e, Rank lo, Rank hi) const
 { //assert: 0 <= lo < hi <= _size
 	return (rand() % 2) ? //°´¸÷50%µÄ¸ÅÂÊËæ»úÊ¹ÓÃ¶ş·Ö²éÕÒ»òFibonacci²éÕÒ
@@ -453,9 +477,24 @@ static Rank binSearch(T* A, T const& e, Rank lo, Rank hi)
 } //ÓĞ¶à¸öÃüÖĞÔªËØÊ±£¬×ÜÄÜ±£Ö¤·µ»ØÖÈ×î´óÕß£»²éÕÒÊ§°ÜÊ±£¬ÄÜ¹»·µ»ØÊ§°ÜµÄÎ»ÖÃ
 
 
-  // Fibonacci²éÕÒËã·¨£¨°æ±¾A£©£ºÔÚÓĞĞòÏòÁ¿µÄÇø¼ä[lo, hi)ÄÚ²éÕÒÔªËØe£¬0 <= lo <= hi <= _size
+ // Fibonacci²éÕÒËã·¨£¨°æ±¾A£©£ºÔÚÓĞĞòÏòÁ¿µÄÇø¼ä[lo, hi)ÄÚ²éÕÒÔªËØe£¬0 <= lo <= hi <= _size
 template <typename T>
 static Rank fibSearch(T* A, T const& e, Rank lo, Rank hi)
+{
+	Fib fib(hi - lo); //ÓÃO(log_phi(n = hi - lo)Ê±¼ä´´½¨FibÊıÁĞ
+	while (lo < hi) //Ã¿²½µü´ú¿ÉÄÜÒª×öÁ½´Î±È½ÏÅĞ¶Ï£¬ÓĞÈı¸ö·ÖÖ§
+	{
+		while (hi - lo < fib.get())
+			fib.prev(); //Í¨¹ıÏòÇ°Ë³Ğò²éÕÒ£¨·ÖÌ¯O(1)£©¡ª¡ªÖÁ¶àµü´ú¼¸´Î£¿
+		Rank mi = lo + fib.get() - 1; //È·¶¨ĞÎÈçFib(k) - 1µÄÖáµã
+		(e < A[mi]) ? hi = mi : lo = mi + 1;
+	} //³É¹¦²éÕÒ¿ÉÒÔÌáÇ°ÖÕÖ¹
+	return --lo; //²éÕÒÊ§°Ü
+} //ÓĞ¶à¸öÃüÖĞÔªËØÊ±£¬²»ÄÜ±£Ö¤·µ»ØÖÈ×î´óÕß£»Ê§°ÜÊ±£¬¼òµ¥µØ·µ»Ø-1£¬¶ø²»ÄÜÖ¸Ê¾Ê§°ÜµÄÎ»ÖÃ
+
+
+template <typename T>
+static Rank simpleFibSearch(T* A, T const& e, Rank lo, Rank hi)
 {
 	Fib fib(hi - lo); //ÓÃO(log_phi(n = hi - lo)Ê±¼ä´´½¨FibÊıÁĞ
 	while (lo < hi) //Ã¿²½µü´ú¿ÉÄÜÒª×öÁ½´Î±È½ÏÅĞ¶Ï£¬ÓĞÈı¸ö·ÖÖ§

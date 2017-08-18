@@ -12,8 +12,11 @@ int main()
 	Vector<int> myVec = Vector<int>(pa, 10);
 	myVec.traverse(output);
 	cout << endl;
-	myVec.selectionSort();
+	myVec.insertionSort();
 	myVec.traverse(output);
+	cout << endl;
+
+
 
 	cin.get();
 	return 0;
