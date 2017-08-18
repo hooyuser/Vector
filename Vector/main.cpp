@@ -12,7 +12,7 @@ int main()
 	Vector<int> myVec = Vector<int>(pa, 10);
 	myVec.traverse(output);
 	cout << endl;
-	myVec.insertionSort();
+	myVec.quickSort();
 	myVec.traverse(output);
 	cout << endl;
 

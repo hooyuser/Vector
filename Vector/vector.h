@@ -143,9 +143,24 @@ public:
 
 	void mergeSort(Rank lo, Rank hi); //¹é²¢ÅÅĞòËã·¨
 
+	void mergeSort()
+	{
+		mergeSort(0, _size);
+	}
+
 	void bubbleSort(Rank lo, Rank hi); //ÆğÅİÅÅĞòËã·¨
 
-	void quickSort(Rank lo, Rank hi); //¿ìËÙÅÅĞòËã·¨
+	void bubbleSort()
+	{
+		bubbleSort(0, _size);
+	}
+
+	void quickSort(Rank lo, Rank hi);  //¿ìËÙÅÅĞòËã·¨
+
+	void quickSort()
+	{
+		quickSort(0, _size);
+	}
 
 	void heapSort(Rank lo, Rank hi); //¶ÑÅÅĞò£¨ÉÔºó½áºÏÍêÈ«¶Ñ½²½â£©
 
@@ -203,6 +218,34 @@ template <typename T>
 Rank Vector<T>::max(Rank lo, Rank hi)
 {
 	return (_elem[lo] > _elem[hi] ? _elem[lo] : _elem[hi]);
+}
+
+template<typename T>
+Rank Vector<T>::partition(Rank lo, Rank hi)
+{
+	int first = lo;
+	int last = hi - 1;
+	int key = _elem[first];/*ÓÃ×Ö±íµÄµÚÒ»¸ö¼ÇÂ¼×÷ÎªÊàÖá*/
+
+	while (first < last)
+	{
+		while (first < last &&  _elem[last] >= key)
+		{
+			--last;
+		}
+
+		_elem[first] = _elem[last];/*½«±ÈµÚÒ»¸öĞ¡µÄÒÆµ½µÍ¶Ë*/
+
+		while (first < last &&  _elem[first] <= key)
+		{
+			++first;
+		}
+
+		_elem[last] = _elem[first];
+		/*½«±ÈµÚÒ»¸ö´óµÄÒÆµ½¸ß¶Ë*/
+	}
+	_elem[first] = key;/*ÊàÖá¼ÇÂ¼µ½Î»*/
+	return first;
 }
 
 
@@ -271,7 +314,8 @@ int Vector<T>::disordered() const  //·µ»ØÏòÁ¿ÖĞÄæĞòÏàÁÚÔªËØ¶ÔµÄ×ÜÊı
 {
 	int n = 0; //¼ÆÊıÆ÷
 	for (int i = 1; i < _size; i++) //ÖğÒ»¼ì²é_size - 1¶ÔÏàÁÚÔªËØ
-		if (_elem[i - 1] > _elem[i]) ++n; //ÄæĞòÔò¼ÆÊı
+		if (_elem[i - 1] > _elem[i])
+			++n; //ÄæĞòÔò¼ÆÊı
 	return n; //ÏòÁ¿ÓĞĞòµ±ÇÒ½öµ±n = 0
 }
 
@@ -298,7 +342,7 @@ Rank Vector<T>::find(T const& e, Rank lo, Rank hi) const //ÎŞĞòÏòÁ¿µÄË³Ğò²éÕÒ£º·
 
 
 template <typename T> //½«e×÷ÎªÖÈÎªrÔªËØ“IÈë
-Rank Vector<T>::insert(Rank r, T const& e) 
+Rank Vector<T>::insert(Rank r, T const& e)
 { //assert: 0 <= r <= size
 	expand(); //ÈôÓĞ±ØÒª£¬À©Èİ
 	for (int i = _size; i > r; i--)
@@ -376,6 +420,18 @@ void Vector<T>::bubbleSort(Rank lo, Rank hi) //assert: 0 <= lo < hi <= size
 } //ÖğÌË×öÉ¨Ãè½»»»£¬Ö±ÖÁÈ«Ğò
 
 
+template<typename T>
+void Vector<T>::quickSort(Rank lo, Rank hi)
+{
+	if (hi - lo <= 1)
+		return;
+	else
+	{
+		Rank pivot = partition(lo, hi);
+		quickSort(lo, pivot);
+		quickSort(pivot + 1, hi);
+	}
+}
 
 
 template <typename T>
@@ -414,11 +470,11 @@ void Vector<T>::insertionSort(Rank lo, Rank hi) //²åÈëÅÅĞò
 {
 	for (int i = lo + 1; i < hi; i++) //½øĞĞhi-lo-1ÂÖÅÅĞò£¬µÚiÂÖ½«_elem[i]²åÈëµ½[lo,i)ÖĞµÄÇ¡µ±Î»ÖÃ
 	{
-		T temp = _elem[i];		
+		T temp = _elem[i];
 		Rank index = search(_elem[i], lo, i) + 1;  //Ó¦¸Ã²åÈë_elem[i]µÄÎ»ÖÃ
 		for (int j = i; j > index; j--)
 			_elem[j] = _elem[j - 1];
-		_elem[index] = temp;	
+		_elem[index] = temp;
 	}
 }
 
