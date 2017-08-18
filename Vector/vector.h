@@ -103,10 +103,10 @@ public:
 
 	Rank insert(Rank r, T const& e); //插入元素
 
-	Rank insert(T const& e)
+	Rank insert(T const& e) //默认作为末元素插入
 	{
 		return insert(_size, e);
-	} //默认作为末元素插入
+	}
 
 	int deduplicate(); //无序去重
 
@@ -127,6 +127,11 @@ public:
 	}
 
 	void selectionSort(Rank lo, Rank hi); //选择排序算法
+
+	void selectionSort()
+	{
+		selectionSort(0, _size);
+	}
 
 	void mergeSort(Rank lo, Rank hi); //归并排序算法
 
@@ -380,6 +385,20 @@ Rank Vector<T>::bubble(Rank lo, Rank hi) //一趟扫描交换
 }
 
 
+template<typename T>
+void Vector<T>::selectionSort(Rank lo, Rank hi)
+{
+	for (int i = hi - 1; i > lo; i--)
+	{
+		int max = lo;
+		for (int j = lo + 1; j <= i; j++)
+			if (_elem[j] > _elem[max])
+				max = j;
+		swap(_elem[i], _elem[max]);
+	}
+}
+
+
 template <typename T> //向量归并排序
 void Vector<T>::mergeSort(Rank lo, Rank hi)
 { //0 <= lo < hi <= size
@@ -388,7 +407,6 @@ void Vector<T>::mergeSort(Rank lo, Rank hi)
 	mergeSort(lo, mi);
 	mergeSort(mi, hi); //分别排序
 	merge(lo, mi, hi); //归并
-
 }
 
 
@@ -469,4 +487,6 @@ void Vector<T>::traverse(VST& visit) //倚劣函数对象机刢
 {
 	for (int i = 0; i < _size; i++) visit(_elem[i]); //遍历向量
 }
+
+
 #endif 

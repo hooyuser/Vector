@@ -3,12 +3,24 @@
 
 using namespace std;
 
+void output(int);
+
 int main()
 {
 	int a[10] = { 2,6,8,5,9,1,0,3,4,7 };
 	int* pa = a;
-	Vector<int> myvec = Vector<int>(pa, 9);
+	Vector<int> myVec = Vector<int>(pa, 10);
+	myVec.traverse(output);
+	cout << endl;
+	myVec.selectionSort();
+	myVec.traverse(output);
 
 	cin.get();
 	return 0;
+}
+
+
+void output(int num)
+{
+	cout << num << ' ';
 }
