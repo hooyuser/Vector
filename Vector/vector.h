@@ -299,7 +299,7 @@ void Vector<T>::shrink() //装填因子过小时压缩向量所占空间
 {
 	if (_capacity < DEFAULT_CAPACITY << 1)
 		return; //不致收缩到 DEFAULT_CAPACITY 以下
-	if (_size * MIN_OCCUPANCY > _capacity)
+	if (_size > _capacity* MIN_OCCUPANCY)
 		return; //以MIN_OCCUPANCY为下界
 	T* oldElem = _elem;
 	_elem = new T[_capacity >>= 1]; //容量减半
